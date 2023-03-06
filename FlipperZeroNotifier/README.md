@@ -4,7 +4,7 @@ Considering the uprising demand for Flipper Zero, you might be experiencing some
 Moreover, you might not have enough time to check the website or discord if the shop had been restocked.
 
 This script allows you to check if the Flipper Zero is available for purchase without making a move. Basically, 
-you will receive quite a common notification on your computer. It will look a usual message notification.
+you will receive quite a common notification on your computer. It will look like a usual message notification.
 
 Libraries needed:
     <ol>
