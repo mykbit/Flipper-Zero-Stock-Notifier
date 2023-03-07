@@ -20,8 +20,8 @@ elif platform.system() == 'Darwin':
     print(icon_path)
     print("Running on MacOS")
 else:
-    print("Running on an unknown OS\n")
-    icon_path = os.path.abspath('icon.icns')
+    print("Running on a different OS\n")
+    icon_path = os.path.abspath('icon.png')
 # Get a relative path of the icon file depending on the OS running, which is located in the same directory as the script
 
 
