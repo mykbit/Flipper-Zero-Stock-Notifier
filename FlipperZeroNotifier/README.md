@@ -1,4 +1,4 @@
-<mark>!!!Currently, works only on MacOS!!!</mark>
+<mark>!!!Currently, stable only on MacOS!!!</mark>
 
 Considering the uprising demand for Flipper Zero, you might be experiencing some issues with purchasing this device. 
 Moreover, you might not have enough time to check the website or discord if the shop had been restocked.
