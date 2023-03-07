@@ -3,10 +3,14 @@
 Considering the uprising demand for Flipper Zero, you might be experiencing some issues with purchasing this device. 
 Moreover, you might not have enough time to check the website or discord if the shop had been restocked.
 
-This script allows you to check if the Flipper Zero is available for purchase without making a move. Basically, 
-you will receive quite a common notification on your computer. It will look like a usual message notification.
+This script allows you to check if the Flipper Zero is available for purchase without making a move. Basically, the
+script is running in the background, while you're doing your own work. When the Flipper Zero appears to be in stock,
+you will receive a usual message notification that states "Flipper Zero is ready for purchase!". No sound, no disturbance
+from the notification. It just stays on your screen for 10 seconds, so you can actually notice it.
 
-Libraries needed:
+First of all, make sure you have python installed on your computer.
+
+Additional libraries needed:
     <ol>
     <li> plyer </li>
     <li> pyobjus </li>
