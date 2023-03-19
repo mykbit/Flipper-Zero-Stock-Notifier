@@ -1,11 +1,11 @@
 import os;
 
-# Define a list of required libraries
-required_libraries = ['requests', 'plyer', 'pyobjus']
+# Define a list of required libraries installed through pip
+required_pip_libraries = ['requests', 'plyer', 'pyobjus', 'selenium']
 
 # Check if the required libraries are installed
 missing_libraries = []
-for lib in required_libraries:
+for lib in required_pip_libraries:
     try:
         __import__(lib)
     except ImportError:
