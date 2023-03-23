@@ -74,16 +74,14 @@ def checkAvailability(options, icon_path, userAnswer):
             elementJSON = json.loads(element.get_attribute('innerHTML'))
             availability = elementJSON["available"]
 
-        # If the website is available for purchase and user wants to have notifications every minute, notify the user every minute
-        # Else, notify the user only once
         if availability == True and userAnswer == True:
             notifyUser(icon_path)
-        else :
+        elif availability == True and userAnswer == False:
             notifyUser(icon_path)
             exit()
 
-        time.sleep(60)
-        # Sleep for 60 seconds
+        time.sleep(45)
+        # Sleep for 45 seconds
 
 def main():
     print("Flipper Zero Notifier")
