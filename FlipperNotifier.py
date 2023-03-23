@@ -7,18 +7,41 @@ import platform
 from sys import exit
 import os
 
+# TODO
+# - Let the user choose the browser and change the options accordingly
 
-def notifyUser(icon_path):
+def notifyUser(icon_path, userAnswerTimeout):
     notification.notify(
         title = 'Flipper Zero',
         message = 'Flipper Zero is ready for purchase!',
         app_icon = icon_path,
-        timeout = 10
-        # You can tweak "timeout" to whatever value (in seconds) you want. "timeout" is responsible for the amount of time 
-        # the notification stays on your screen
-    )
+        timeout = userAnswerTimeout)
 
-def askUser():
+
+def askUserBrowser():
+    while True:
+        user_input = input("Which browser do you want to use for the virtual window? (Chrome/Firefox/Safari): ")
+        if user_input == 'Chrome':
+            return 'Chrome'
+        elif user_input == 'Firefox':
+            return 'Firefox'
+        elif user_input == 'Safari':
+            return 'Safari'
+        else:
+            print("Invalid input. Please try again.")
+
+
+def askUserTimeout():
+    while True:
+        user_input = input("How long do you want the notification to stay on your screen? (in seconds): ")
+        try:
+            user_input = int(user_input)
+            return user_input
+        except ValueError:
+            print("Invalid input. Please try again.")
+
+
+def askUserFrequency():
     while True:
         user_input = input("Do you want to recieve notifications every minute after the website had been restocked? (y/n): ")
         if user_input == 'y':
@@ -63,34 +86,40 @@ def virtualWindowOptions():
     print("Cookies deleted -> Automatic region selection engaged!")
     return options
 
-def checkAvailability(options, icon_path, userAnswer):
+
+def checkAvailability(options, icon_path, userAnswerFrequency, userAnswerTimeout):
     # Run a "while" loop with a delay of 60 seconds which checks the current state of the website
     while True:
         current_time = time.strftime("%H:%M:%S", time.localtime())
         print("Checking at... ", current_time)
-        with webdriver.Chrome(options=options) as driver:
-            driver.get("https://shop.flipperzero.one/")
-            element = driver.find_element(By.CSS_SELECTOR, 'script[id^="ProductJson-"]')
-            elementJSON = json.loads(element.get_attribute('innerHTML'))
-            availability = elementJSON["available"]
+        
+        driver = webdriver.Chrome(options=options)
+        driver.get("https://shop.flipperzero.one/")
+        time.sleep(3)
+        element = driver.find_element(By.CSS_SELECTOR, 'script[id^="ProductJson-"]')
+        elementJSON = json.loads(element.get_attribute('innerHTML'))
+        availability = elementJSON["available"]
 
-        if availability == True and userAnswer == True:
-            notifyUser(icon_path)
-        elif availability == True and userAnswer == False:
-            notifyUser(icon_path)
+        if availability == True and userAnswerFrequency == True:
+            notifyUser(icon_path, userAnswerTimeout)
+        elif availability == True and userAnswerFrequency == False:
+            notifyUser(icon_path, userAnswerTimeout)
             exit()
 
         time.sleep(45)
         # Sleep for 45 seconds
 
+
 def main():
     print("Flipper Zero Notifier")
     print("By: @mykbit")
     print("This script will check the availability of Flipper Zero every minute and notify you if it's available for purchase.")
-    userAnswer = askUser()
+    userAnswerBrowser = askUserBrowser()
+    userAnswerFrequency = askUserFrequency()
+    userAnswerTimeout = askUserTimeout()
     icon_path = checkOS()
     print("Started")
-    checkAvailability(virtualWindowOptions(), icon_path, userAnswer)
+    checkAvailability(virtualWindowOptions(), icon_path, userAnswerFrequency, userAnswerTimeout)
 
 if __name__ == "__main__":
     main()
