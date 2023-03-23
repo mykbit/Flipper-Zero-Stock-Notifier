@@ -1,56 +1,98 @@
-import requests
 import time
 from plyer import notification
-from datetime import datetime
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+import json
 import platform
 from sys import exit
 import os
 
 
-initial_responce = requests.get("https://shop.flipperzero.one/")
-# Get the initial responce from the website given that it's out of stock
-initial_state = initial_responce.content
-# Store the contents of the obtained page
+def notifyUser(icon_path):
+    notification.notify(
+        title = 'Flipper Zero',
+        message = 'Flipper Zero is ready for purchase!',
+        app_icon = icon_path,
+        timeout = 10
+        # You can tweak "timeout" to whatever value (in seconds) you want. "timeout" is responsible for the amount of time 
+        # the notification stays on your screen
+    )
 
-if platform.system() == 'Windows':
-    icon_path = os.path.abspath('icon.ico')
-    print("Running on Windows")
-elif platform.system() == 'Darwin':
-    icon_path = os.path.abspath('icon.icns')
-    print(icon_path)
-    print("Running on MacOS")
-else:
-    print("Running on a different OS\n")
-    icon_path = os.path.abspath('icon.png')
-# Get a relative path of the icon file depending on the OS running, which is located in the same directory as the script
+def askUser():
+    while True:
+        user_input = input("Do you want to recieve notifications every minute after the website had been restocked? (y/n): ")
+        if user_input == 'y':
+            return True
+        elif user_input == 'n':
+            return False
+        else:
+            print("Invalid input. Please try again.")
+
+def checkOS():
+    if platform.system() == 'Windows':
+        icon_path = os.path.abspath('icon.ico')
+        print("Running on Windows")
+    elif platform.system() == 'Darwin':
+        icon_path = os.path.abspath('icon.icns')
+        print("Running on MacOS")
+    else:
+        icon_path = os.path.abspath('icon.png')
+        print("Running on a different OS\n")
+
+    return icon_path
 
 
-print("Started")
+def virtualWindowOptions():
+    print("Setting up virtual window...")
+    options = webdriver.ChromeOptions()
+    # options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+    options.add_argument('--disable-gpu')
+    options.add_argument('--headless')
 
-# Run a "while" loop with a delay of 60 seconds which checks the current state of the website
-while True:
-    now = datetime.now()
-    current_time = now.strftime("%H:%M:%S")
-    print("Checking... at ", current_time)
-    # Giving some time context to the "check" messages
-    response = requests.get("https://shop.flipperzero.one/")
-    # Get the most up-to-date responce from the website
+    # Apply parameters to a virtual window
+    driver = webdriver.Chrome(options=options)
 
-    current_state = response.content
-    # Store it
+    driver.get("https://shop.flipperzero.one/")
 
-    # If the newly obtained state is not equal to the initial one, then a notification is set up
-    if current_state != initial_state:
-        notification.notify(
-            title = 'Flipper Zero',
-            message = 'Flipper Zero is ready for purchase!',
-            app_icon = icon_path,
-            timeout = 10,
-            # You can tweak "timeout" to whatever value (in seconds) you want. "timeout" is responsible for the amount of time 
-            # the notification stays on your screen
-        )
-        initial_state = current_state
-        # This line is optional. If you wish to recieve notifications every single minute after the website had been restocked,
-        # then just delete it. Otherwise, keep it.
-    time.sleep(60)
-    # Sleep for 60 seconds
+    driver.delete_all_cookies()
+
+    # Refresh the page to apply the changes
+    driver.refresh()
+
+    print("Cookies deleted -> Automatic region selection engaged!")
+    return options
+
+def checkAvailability(options, icon_path, userAnswer):
+    # Run a "while" loop with a delay of 60 seconds which checks the current state of the website
+    while True:
+        current_time = time.strftime("%H:%M:%S", time.localtime())
+        print("Checking at... ", current_time)
+        with webdriver.Chrome(options=options) as driver:
+            driver.get("https://shop.flipperzero.one/")
+            element = driver.find_element(By.CSS_SELECTOR, 'script[id^="ProductJson-"]')
+            elementJSON = json.loads(element.get_attribute('innerHTML'))
+            availability = elementJSON["available"]
+
+        # If the website is available for purchase and user wants to have notifications every minute, notify the user every minute
+        # Else, notify the user only once
+        if availability == True and userAnswer == True:
+            notifyUser(icon_path)
+        else :
+            notifyUser(icon_path)
+            exit()
+
+        time.sleep(60)
+        # Sleep for 60 seconds
+
+def main():
+    print("Flipper Zero Notifier")
+    print("By: @mykbit")
+    print("This script will check the availability of Flipper Zero every minute and notify you if it's available for purchase.")
+    userAnswer = askUser()
+    icon_path = checkOS()
+    print("Started")
+    checkAvailability(virtualWindowOptions(), icon_path, userAnswer)
+
+if __name__ == "__main__":
+    main()
