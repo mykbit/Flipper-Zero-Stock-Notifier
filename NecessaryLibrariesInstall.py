@@ -1,7 +1,7 @@
 import os;
 
 # Define a list of required libraries installed through pip
-required_pip_libraries = ['requests', 'plyer', 'pyobjus', 'selenium']
+required_pip_libraries = ['plyer', 'pyobjus', 'selenium']
 
 # Check if the required libraries are installed
 missing_libraries = []
@@ -18,3 +18,5 @@ if missing_libraries:
     command = 'pip install ' + ' '.join(missing_libraries)
     os.system(command)
     print("Missing libraries installed.")
+else:
+    print("All necessary libraries have already been installed.")
