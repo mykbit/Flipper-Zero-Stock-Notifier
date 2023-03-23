@@ -1,4 +1,4 @@
-<mark>!!!Currently, works only on MacOS and Linux paired with Google Chrome!!!</mark>
+**<mark>!!!Currently, works only on MacOS and Linux paired with Google Chrome!!!</mark>**
 
 Considering the uprising demand for Flipper Zero, you might be experiencing some issues with purchasing this device. 
 Moreover, you might not have enough time to check the website or discord if the shop had been restocked.
@@ -10,7 +10,7 @@ from the notification. It just stays on your screen for 10 seconds, so you can a
 
 First of all, make sure you have python installed on your computer.
 
-Additional libraries needed:
+**Additional libraries needed:**
     <ol>
     <li> plyer </li>
     <li> pyobjus </li>
@@ -18,7 +18,7 @@ Additional libraries needed:
     </ol>
 
 
-Running instruction:
+**Running instruction:**
     MacOS:
          <ol>
          <li> Open Terminal </li>
@@ -28,7 +28,7 @@ Running instruction:
          </ol>
         If you want to stop the application, press <control + C> in the Terminal
 
-I'm planning further updates, which include:
+**I'm planning further updates, which include:**
     <ol> 
     <li> More supported browsers </li>
     <li> Adding number of units left in stock </li>
